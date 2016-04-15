@@ -28,7 +28,7 @@ public class Splash extends Activity {
                 // Do what ever you want
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(Splash.this, LoginActivity.class);
+                Intent i = new Intent(Splash.this, SignUpActivity.class);
                 startActivity(i);
 
                 // close this activity
