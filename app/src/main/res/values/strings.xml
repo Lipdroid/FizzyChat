@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">FizzyChat</string>
     <string name="sign_up_title">Sign up in seconds</string>
+    <array name="gender">
+        <item>Male</item>
+        <item>Female</item>
+    </array>
 </resources>

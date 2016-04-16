@@ -22,6 +22,9 @@
         <activity
             android:name=".SignUpActivity"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".CountryList"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>
