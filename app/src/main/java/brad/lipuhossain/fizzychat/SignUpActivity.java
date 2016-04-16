@@ -31,6 +31,8 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import brad.lipuhossain.fizzychat.Utils.GlobalUtils;
+
 
 public class SignUpActivity extends Activity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     private LinearLayout ln_age = null;
@@ -47,7 +49,18 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
     private EditText password = null;
     private ImageView btn_signup = null;
     private ImageView btn_fb = null;
+    private LinearLayout  ln_goto_login = null;
 
+    private String email = null;
+    private String pass = null;
+
+    private String name = null;
+    private String age = null;
+
+    private String country = null;
+    private String gender = null;
+
+    private Context mContext = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +69,14 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        mContext = this;
         //initialize the views
         ln_age = (LinearLayout) findViewById(R.id.llage);
         tv_age = (TextView) findViewById(R.id.tv_age);
         ln_country = (LinearLayout) findViewById(R.id.llcountry);
         tv_country = (TextView) findViewById(R.id.tv_country);
         ln_gender = (LinearLayout) findViewById(R.id.llgender);
+        ln_goto_login = (LinearLayout) findViewById(R.id.login_page_btn);
         tv_gender = (TextView) findViewById(R.id.tv_gender);
         mail = (EditText) findViewById(R.id.et_mail);
         username = (EditText) findViewById(R.id.et_username);
@@ -79,14 +94,12 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
         //set up the listeners
         ln_age.setOnClickListener(this);
         ln_country.setOnClickListener(this);
+        ln_goto_login.setOnClickListener(this);
         ln_gender.setOnClickListener(this);
         btn_signup.setOnClickListener(this);
         btn_fb.setOnClickListener(this);
     }
 
-    public void next_page(View v) {
-        startActivity(new Intent(this, LoginActivity.class));
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -127,13 +140,64 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
                 //login facebook
                 loginWithfacebook();
                 break;
+            case R.id.login_page_btn:
+                //goto login page
+                gotoLogin();
+                break;
         }
     }
 
+    private void gotoLogin() {
+        startActivity(new Intent(this, LoginActivity.class));
+    }
+
     private void loginWithfacebook() {
+
     }
 
     private void mailSignUp() {
+        String dialogBody = null;
+        email = mail.getText().toString().trim();
+        pass = password.getText().toString().trim();
+        name = username.getText().toString().trim();
+        age = tv_age.getText().toString().trim();
+        country = tv_country.getText().toString().trim();
+        gender = tv_gender.getText().toString().trim();
+
+        if (email.equals("")) {
+            dialogBody = getResources().getString(R.string.dialog_body_email_empty_label);
+            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            return;
+        } else if (pass.equals("")) {
+            dialogBody = getResources().getString(R.string.dialog_body_password_empty_label);
+            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            return;
+        } else if (!GlobalUtils.isEmailValid(mail.getText().toString())) {
+            dialogBody = getResources().getString(R.string.dialog_body_email_invalid_label);
+            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            return;
+        }else if (name.equals("")) {
+            dialogBody = getResources().getString(R.string.dialog_body_name_empty_label);
+            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            return;
+        } else if (age.equals("")) {
+            dialogBody = getResources().getString(R.string.dialog_body_age_empty_label);
+            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            return;
+        }else if (country.equals("")) {
+            dialogBody = getResources().getString(R.string.dialog_body_country_empty_label);
+            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            return;
+        } else if (gender.equals("")) {
+            dialogBody = getResources().getString(R.string.dialog_body_gender_label);
+            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            return;
+        }
+
+        requestformailSignUp();
+    }
+
+    private void requestformailSignUp() {
     }
 
     public PopupWindow popupWindowShow(Context mActivity) {

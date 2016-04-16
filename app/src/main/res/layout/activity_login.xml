@@ -70,6 +70,7 @@
                             android:src="@drawable/man_logo" />
 
                         <EditText
+                            android:id="@+id/et_username"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -102,11 +103,13 @@
                             android:src="@drawable/password_icon" />
 
                         <EditText
+                            android:id="@+id/et_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:background="@null"
-                            android:hint="Choose a password"
+                            android:hint="Type password"
+                            android:password="true"
                             android:singleLine="true"
                             android:textColor="#CBCBCB"
                             android:textColorHint="#CBCBCB"
@@ -125,7 +128,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
+                        android:id="@+id/signin_mail"
                         android:src="@drawable/signup" />
 
                 </LinearLayout>
@@ -152,6 +155,7 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/btn_fb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"

@@ -5,4 +5,41 @@
     <color name="colorAccent">#00AAE9</color>
 
     <color name="gray">#F7F7F7</color>
+
+
+
+    <color name="main_dark">#000000</color>
+    <color name="introduction_text">#9FA0A0</color>
+    <color name="orange_light">#ffcc4d</color>
+    <color name="orange">#FFB600</color>
+    <color name="text_dark">#9FA0A0</color>
+    <color name="red">#ff0000</color>
+    <color name="btn_login_facebook">#2E5DAC</color>
+    <color name="btn_login_twitter">#59ADEC</color>
+    <color name="spinner_background">#808080</color>
+    <color name="clock_remain">#3d3939</color>
+    <color name="border_bottom">#C9CACA</color>
+    <color name="dash_border">#C9CACA</color>
+    <color name="common_white_10">#1aFFFFFF</color>
+    <color name="common_yellow_txt">#f9b201</color>
+    <color name="edit_profile_bg">#898989</color>
+    <color name="common_gray">#ebeeee</color>
+    <color name="common_line_ec">#747474</color>
+    <color name="common_black_10">#1a000000</color>
+    <color name="common_black_50">#80000000</color>
+    <color name="common_gray_bg">#f6f7f7</color>
+    <color name="common_ec_blue_bg">#0055bd</color>
+    <color name="common_ec_blue_txt">#0055bd</color>
+    <color name="common_ec_white_blue_txt">#993270bb</color>
+    <color name="common_ec_red">#a20000</color>
+    <color name="common_toretan_class_empty">#C9CACA</color>
+    <color name="hint_color">#ababac</color>
+    <color name="common_line_color">#bfc0c0</color>
+
+    <!--&lt;!&ndash;use for canpass&ndash;&gt;-->
+    <!--<color name="common_sc_main_color">#fff51e</color>-->
+    <!--<color name="common_sc_main_dark_color">#b2ab15</color>-->
+    use for tadacopy
+    <color name="common_sc_main_color">#FFB600</color>
+    <color name="common_sc_main_dark_color">#CCFFB600</color>
 </resources>
