@@ -18,6 +18,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -40,6 +42,12 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
     private DatePickerDialog dpd = null;
     private Calendar now = null;
     private PopupWindow popupWindow = null;
+    private EditText mail = null;
+    private EditText username = null;
+    private EditText password = null;
+    private ImageView btn_signup = null;
+    private ImageView btn_fb = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,11 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
         tv_country = (TextView) findViewById(R.id.tv_country);
         ln_gender = (LinearLayout) findViewById(R.id.llgender);
         tv_gender = (TextView) findViewById(R.id.tv_gender);
+        mail = (EditText) findViewById(R.id.et_mail);
+        username = (EditText) findViewById(R.id.et_username);
+        password = (EditText) findViewById(R.id.et_password);
+        btn_signup = (ImageView) findViewById(R.id.signup_mail);
+        btn_fb = (ImageView) findViewById(R.id.btn_fb);
         //initialize the date picker
         now = Calendar.getInstance();
         dpd = DatePickerDialog.newInstance(
@@ -67,6 +80,8 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
         ln_age.setOnClickListener(this);
         ln_country.setOnClickListener(this);
         ln_gender.setOnClickListener(this);
+        btn_signup.setOnClickListener(this);
+        btn_fb.setOnClickListener(this);
     }
 
     public void next_page(View v) {
@@ -79,7 +94,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 String result = data.getStringExtra("result");
-                if(result != null)
+                if (result != null)
                     tv_country.setText(result);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -92,7 +107,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.llage:
-                 dpd.show(getFragmentManager(), "Datepickerdialog");
+                dpd.show(getFragmentManager(), "Datepickerdialog");
                 break;
             case R.id.llcountry:
                 //go to the country menu page
@@ -104,7 +119,21 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
                 popupWindow = popupWindowShow(this);
                 popupWindow.showAsDropDown(view, 0, -5);
                 break;
+            case R.id.signup_mail:
+                //sign up by mail
+                mailSignUp();
+                break;
+            case R.id.btn_fb:
+                //login facebook
+                loginWithfacebook();
+                break;
         }
+    }
+
+    private void loginWithfacebook() {
+    }
+
+    private void mailSignUp() {
     }
 
     public PopupWindow popupWindowShow(Context mActivity) {
@@ -149,7 +178,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
             Animation fadeInAnimation = AnimationUtils.loadAnimation(v.getContext(), android.R.anim.fade_in);
             fadeInAnimation.setDuration(10);
             v.startAnimation(fadeInAnimation);
-            String value = (String)arg0.getItemAtPosition(arg2);
+            String value = (String) arg0.getItemAtPosition(arg2);
             tv_gender.setText(value);
             // dismiss the pop up
             popupWindow.dismiss();

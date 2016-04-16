@@ -70,6 +70,7 @@
                             android:src="@drawable/man_logo" />
 
                         <EditText
+                            android:id="@+id/et_username"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -102,6 +103,7 @@
                             android:src="@drawable/password_icon" />
 
                         <EditText
+                            android:id="@+id/et_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -235,6 +237,7 @@
                             android:src="@drawable/man_logo" />
 
                         <EditText
+                            android:id="@+id/et_mail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -254,9 +257,9 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/signup_mail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:src="@drawable/signup" />
 
                 </LinearLayout>
@@ -284,9 +287,9 @@
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/btn_fb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:src="@drawable/facebook_signin" />
