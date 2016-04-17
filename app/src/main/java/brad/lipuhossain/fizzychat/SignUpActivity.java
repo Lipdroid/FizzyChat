@@ -46,9 +46,12 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 import brad.lipuhossain.fizzychat.Utils.GlobalUtils;
 
@@ -79,6 +82,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
 
     private String country = null;
     private String gender = null;
+    private String birthday = null;
 
     private Context mContext = null;
     
@@ -110,6 +114,10 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
         password = (EditText) findViewById(R.id.et_password);
         btn_signup = (ImageView) findViewById(R.id.signup_mail);
         btn_fb = (ImageView) findViewById(R.id.btn_fb);
+
+        if(GlobalUtils.user_current_country != null)
+            tv_country.setText(GlobalUtils.user_current_country);
+
         //initialize the date picker
         now = Calendar.getInstance();
         dpd = DatePickerDialog.newInstance(
@@ -223,7 +231,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
             LoginManager.getInstance().logOut();
         }
         LoginManager loginManager = LoginManager.getInstance();
-        loginManager.logInWithReadPermissions(this, Arrays.asList("public_profile", "email" ));
+        loginManager.logInWithReadPermissions(this, Arrays.asList("public_profile", "email"  ,"user_birthday"));
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -241,7 +249,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
                                 }
                             });
                     Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,name,email,age_range,birthday,gender,picture.type(large)");
+                    parameters.putString("fields", "id,name,email,birthday,gender,picture.type(large)");
                     request.setParameters(parameters);
                     request.executeAsync();
                     return;
@@ -274,6 +282,31 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
                 gender = jsonObject.getString("gender");
             if(jsonObject.has("name"))
                 name = jsonObject.getString("name");
+
+            if(GlobalUtils.user_current_country != null)
+                country = GlobalUtils.user_current_country;
+
+            if(jsonObject.has("birthday")) {
+                birthday = jsonObject.getString("birthday");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                try {
+                    Date d = dateFormat.parse(birthday);
+
+                    int current_year = now.get(Calendar.YEAR);
+                    now.setTime(d);
+                    int birth_year = now.get(Calendar.YEAR);
+                    if (birth_year < current_year)
+                        age = String.valueOf(current_year - birth_year);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

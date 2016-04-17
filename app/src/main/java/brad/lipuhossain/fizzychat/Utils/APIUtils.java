@@ -28,14 +28,7 @@ public class APIUtils {
 
             switch (type) {
                 case Constants.REQUEST_GET_USER_COUNTRY:
-                    if (mainJsonObj.has(Constants.TAG_COUNTRY)) {
-
-                        returnHashMap.put(Constants.TAG_COUNTRY, mainJsonObj.getString(Constants.TAG_COUNTRY));
-                    }
-
                     break;
-
-
                 default:
                     break;
             }

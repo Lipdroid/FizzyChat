@@ -31,7 +31,7 @@ public class RequestAsyncTask extends MySafeAsyncTask<String> {
 	
 	@Override
 	public String call() throws Exception {
-		if(GlobalUtils.isNetworkConnected()) {
+		if(GlobalUtils.isNetworkConnected(mContext)) {
 			RequestData getDataObj = new RequestData(mContext);
 			return getDataObj.getData(mTypeOfRequest, mParameters);
 		} else {

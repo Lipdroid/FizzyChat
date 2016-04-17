@@ -24,7 +24,7 @@ import brad.lipuhossain.fizzychat.widgets.ProgressDialog;
  */
 public class GlobalUtils {
     private static ProgressDialog sPdLoading = null;
-
+    public  static String user_current_country = null;
 
     public static void showInfoDialog(Context context, String title, String body, String action, final DialogCallback dialogCallback) {
 
@@ -85,9 +85,9 @@ public class GlobalUtils {
         return isValid;
     }
 
-    public static boolean isNetworkConnected() {
+    public static boolean isNetworkConnected(Context context) {
         try {
-            ConnectivityManager cm = (ConnectivityManager) FizzyApplication.getFizzyContext()
+            ConnectivityManager cm = (ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getActiveNetworkInfo();
             if (netInfo != null && netInfo.isConnected()) {

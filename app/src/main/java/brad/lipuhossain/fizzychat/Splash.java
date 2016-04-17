@@ -11,6 +11,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -35,19 +39,14 @@ public class Splash extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         mContext = Splash.this;
-        getUserCountry();
         handler = new Handler(Looper.getMainLooper());
         runnable = new Runnable() {
             @Override
             public void run() {
-                // Do what ever you want
-                // This method will be executed once the timer is over
-                // Start your app main activity
-                Intent i = new Intent(Splash.this, SignUpActivity.class);
-                startActivity(i);
 
-                // close this activity
-                finish();
+                //get the country then go to the signup page
+                getUserCountry();
+
             }
         };
         handler.postDelayed(runnable, SPLASH_TIME_OUT);
@@ -59,24 +58,39 @@ public class Splash extends Activity {
             @Override
             public void done(String result) {
                 Log.e(TAG_LOG, result);
+                try {
+                    JSONObject jObj = new JSONObject(result);
+                    if(jObj.has(Constants.TAG_COUNTRY)){
+                        GlobalUtils.user_current_country = jObj.getString(Constants.TAG_COUNTRY);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                HashMap<String, Object> returnHashMap = APIUtils.parseJSON(Constants.REQUEST_GET_USER_COUNTRY, result);
+                // Do what ever you want
+                // This method will be executed once the timer is over
+                // Start your app main activity
+                Intent i = new Intent(Splash.this, SignUpActivity.class);
+                startActivity(i);
+
+                // close this activity
+                finish();
 
             }
 
             @Override
             public void progress() {
-                GlobalUtils.showLoadingProgress(mContext);
+               // GlobalUtils.showLoadingProgress(mContext);
             }
 
             @Override
             public void onInterrupted(Exception e) {
-                GlobalUtils.dismissLoadingProgress();
+                //GlobalUtils.dismissLoadingProgress();
             }
 
             @Override
             public void onException(Exception e) {
-                GlobalUtils.dismissLoadingProgress();
+                //GlobalUtils.dismissLoadingProgress();
             }
         });
 
