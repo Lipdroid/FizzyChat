@@ -5,11 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -26,15 +31,30 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import brad.lipuhossain.fizzychat.Utils.GlobalUtils;
 
 
 public class SignUpActivity extends Activity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+    private static final String TAG = "SignUpActivity";
     private LinearLayout ln_age = null;
     private TextView tv_age = null;
     private LinearLayout ln_country = null;
@@ -61,6 +81,9 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
     private String gender = null;
 
     private Context mContext = null;
+    
+    // facebook variable
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +91,11 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        //init facebook callbackmanager
+        callbackManager = CallbackManager.Factory.create();
+
         setContentView(R.layout.activity_signup);
+        printKeyHash(this);
         mContext = this;
         //initialize the views
         ln_age = (LinearLayout) findViewById(R.id.llage);
@@ -103,7 +130,8 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 String result = data.getStringExtra("result");
@@ -147,16 +175,114 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
         }
     }
 
+    /**
+     * just for get keyhash
+     *
+     * @param context
+     * @return
+     */
+    public String printKeyHash(Activity context) {
+        PackageInfo packageInfo;
+        String key = null;
+        try {
+            //getting application package name, as defined in manifest
+            String packageName = context.getApplicationContext().getPackageName();
+
+            //Retriving package info
+            packageInfo = context.getPackageManager().getPackageInfo(packageName,
+                    PackageManager.GET_SIGNATURES);
+
+            Log.e("Package Name=", context.getApplicationContext().getPackageName());
+
+            for (Signature signature : packageInfo.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                key = new String(Base64.encode(md.digest(), 0));
+
+                // String key = new String(Base64.encodeBytes(md.digest()));
+                Log.e("Key Hash=", key);
+            }
+        } catch (PackageManager.NameNotFoundException e1) {
+            Log.e("Name not found", e1.toString());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("No such an algorithm", e.toString());
+        } catch (Exception e) {
+            Log.e("Exception", e.toString());
+        }
+
+        return key;
+    }
+
     private void gotoLogin() {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
     private void loginWithfacebook() {
+        // logout previous user before login new one
+        if (AccessToken.getCurrentAccessToken() != null) {
+            LoginManager.getInstance().logOut();
+        }
+        LoginManager loginManager = LoginManager.getInstance();
+        loginManager.logInWithReadPermissions(this, Arrays.asList("public_profile", "email" ));
+        loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                try {
+                    AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                    GraphRequest request = GraphRequest.newMeRequest(
+                            accessToken,
+                            new GraphRequest.GraphJSONObjectCallback() {
+                                @Override
+                                public void onCompleted(
+                                        JSONObject object,
+                                        GraphResponse response) {
+                                    loginSNS(object);
 
+                                }
+                            });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "id,name,email,age_range,birthday,gender,picture.type(large)");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+                    return;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // Utils.dismissLoadingProgress();
+                }
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "onCancel");
+                // Utils.dismissLoadingProgress();
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+                Log.d(TAG, "onError");
+                e.printStackTrace();
+                // Utils.dismissLoadingProgress();
+            }
+        });
     }
+
+    private void loginSNS(JSONObject jsonObject) {
+        try {
+            if(jsonObject.has("email"))
+                email = jsonObject.getString("email");
+            if(jsonObject.has("gender"))
+                gender = jsonObject.getString("gender");
+            if(jsonObject.has("name"))
+                name = jsonObject.getString("name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void mailSignUp() {
         String dialogBody = null;
+        String title = getResources().getString(R.string.dialog_error_title);;
         email = mail.getText().toString().trim();
         pass = password.getText().toString().trim();
         name = username.getText().toString().trim();
@@ -166,31 +292,31 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Da
 
         if (email.equals("")) {
             dialogBody = getResources().getString(R.string.dialog_body_email_empty_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         } else if (pass.equals("")) {
             dialogBody = getResources().getString(R.string.dialog_body_password_empty_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         } else if (!GlobalUtils.isEmailValid(mail.getText().toString())) {
             dialogBody = getResources().getString(R.string.dialog_body_email_invalid_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         }else if (name.equals("")) {
             dialogBody = getResources().getString(R.string.dialog_body_name_empty_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         } else if (age.equals("")) {
             dialogBody = getResources().getString(R.string.dialog_body_age_empty_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         }else if (country.equals("")) {
             dialogBody = getResources().getString(R.string.dialog_body_country_empty_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         } else if (gender.equals("")) {
             dialogBody = getResources().getString(R.string.dialog_body_gender_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         }
 

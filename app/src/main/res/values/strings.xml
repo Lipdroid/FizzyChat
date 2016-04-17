@@ -1,4 +1,7 @@
 <resources>
+    //for facebook
+    <string name="facebook_app_id">793787720756753</string>
+
     <string name="app_name">FizzyChat</string>
     <string name="sign_up_title">Sign up in seconds</string>
     <string name="common_ok_label">Ok</string>
@@ -9,6 +12,9 @@
     <string name="dialog_body_country_empty_label">No country selected</string>
     <string name="dialog_body_age_empty_label">Define your age</string>
     <string name="dialog_body_name_empty_label">Username is empty</string>
+    <string name="dialog_error_title">Error</string>
+    <string name="dialog_no_internet_connection">No internet connecton.</string>
+    <string name="common_loading">Please wait...</string>
     <array name="gender">
         <item>Male</item>
         <item>Female</item>

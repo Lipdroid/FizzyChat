@@ -18,11 +18,20 @@ android {
         }
     }
 }
-
+repositories {
+    mavenCentral()
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.wdullaer:materialdatetimepicker:2.3.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.1.1'
+
+    //for http requests
+    compile files('libs/scmodule-universal-image-loader-1.9.3.jar')
+    compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+    compile files('libs/scmodule-apache-mime4j-0.6.jar')
+    compile files('libs/scmodule-httpmime-4.0.1.jar')
 
 }

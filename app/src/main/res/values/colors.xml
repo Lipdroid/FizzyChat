@@ -40,6 +40,6 @@
     <!--<color name="common_sc_main_color">#fff51e</color>-->
     <!--<color name="common_sc_main_dark_color">#b2ab15</color>-->
     use for tadacopy
-    <color name="common_sc_main_color">#FFB600</color>
-    <color name="common_sc_main_dark_color">#CCFFB600</color>
+    <color name="common_sc_main_color">#23bcee</color>
+    <color name="common_sc_main_dark_color">#00AAE9</color>
 </resources>

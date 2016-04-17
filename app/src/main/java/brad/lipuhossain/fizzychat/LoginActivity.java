@@ -57,20 +57,22 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     private void loginWithMail() {
         String dialogBody = null;
+        String title = getResources().getString(R.string.dialog_error_title);;
+
         mail = username.getText().toString().trim();
         pass = password.getText().toString().trim();
 
         if (mail.equals("")) {
             dialogBody = getResources().getString(R.string.dialog_body_email_empty_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         } else if (pass.equals("")) {
             dialogBody = getResources().getString(R.string.dialog_body_password_empty_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         } else if (!GlobalUtils.isEmailValid(username.getText().toString())) {
             dialogBody = getResources().getString(R.string.dialog_body_email_invalid_label);
-            GlobalUtils.showInfoDialog(mContext, null, dialogBody, null, null);
+            GlobalUtils.showInfoDialog(mContext, title, dialogBody, null, null);
             return;
         }
 
